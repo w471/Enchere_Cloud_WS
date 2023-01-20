@@ -58,9 +58,7 @@ CREATE TABLE ENCHERE(
                         description text,
                         idCategorie integer references CATEGORIE(idCategorie) not null,
                         startPrice double precision not null check ( startPrice>=0 ) default 0,
---     duration will be in hour
                         duration integer not null check ( duration>=0 ) default 0,
-    -- en pourcentage
                         commission double precision check ( commission>=0 ) default 0
 );
 INSERT INTO ENCHERE(timingStart,idLauncher,description,idCategorie,startPrice,duration,commission) VALUES
@@ -86,7 +84,7 @@ CREATE TABLE HISTORIQUE_ENCHERE(
                                    idHistorique integer primary key default nextVal('S_HISTORIQUE_ENCHERE_ID'),
                                    idEnchere integer references ENCHERE(idEnchere),
                                    idClient integer,
-                                   price double precision not null check ( price => 0 ) default 0
+                                   price double precision not null check ( price >= 0 ) default 0
 );
 INSERT INTO HISTORIQUE_ENCHERE(idEnchere,idClient,price) VALUES
                                                              (2,4,40000),
