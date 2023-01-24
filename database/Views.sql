@@ -78,7 +78,6 @@ from categorie
      ) as t1 on t1.idCategorie = categorie.idcategorie
 order by stat desc;
 
-drop view V_CATEGORIE_POURCENTAGE
 
 CREATE OR REPLACE VIEW V_CATEGORIE_POURCENTAGE as
 select categorie.*,
