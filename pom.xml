@@ -73,11 +73,11 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.2.7.RELEASE</version>
                 <configuration>
-                    <source>15</source>
-                    <target>15</target>
+                    <mainClass>group.enchere.EnchereApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
