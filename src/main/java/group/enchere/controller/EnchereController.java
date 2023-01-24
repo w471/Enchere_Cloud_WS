@@ -1,7 +1,7 @@
 package group.enchere.controller;
 
 
-import group.enchere.ModelUtils.Research;
+//import group.enchere.ModelUtils.Research;
 import group.enchere.model.Enchere;
 //import group.enchere.model.EnchereDetails;
 import group.enchere.model.EnchereDetails;
@@ -51,16 +51,16 @@ public class EnchereController {
         System.out.println(newEnchere);
     }
 
-
-    @PostMapping("/search")
-    public void search(@RequestBody Research research){
-        Object[] param = new Object[2];
-        param[0] = 1;
-        param[1] = 2000;
-        Object[][] bref =  research.prepareResearch();
-        List<Enchere> result = repository.search(bref[0][0], bref[1][0], bref[0][1], bref[1][1], bref[0][2], bref[1][2]);
-        System.out.println(result);
-    }
+//
+//    @PostMapping("/search")
+//    public void search(@RequestBody Research research){
+//        Object[] param = new Object[2];
+//        param[0] = 1;
+//        param[1] = 2000;
+//        Object[][] bref =  research.prepareResearch();
+//        List<Enchere> result = repository.search(bref[0][0], bref[1][0], bref[0][1], bref[1][1], bref[0][2], bref[1][2]);
+//        System.out.println(result);
+//    }
 
     @PostMapping
     public void add(@RequestBody Enchere enchere){
