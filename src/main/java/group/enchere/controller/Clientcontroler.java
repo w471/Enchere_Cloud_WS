@@ -5,6 +5,7 @@ import group.enchere.modelRepository.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Map;
 
