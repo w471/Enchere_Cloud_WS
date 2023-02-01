@@ -1,169 +1,196 @@
-//package group.enchere.ModelUtils;
-//
-//import group.enchere.CustomAnnotation.SearchField;
-//
-//import java.beans.IntrospectionException;
-//import java.beans.PropertyDescriptor;
-//import java.lang.reflect.Field;
-//import java.lang.reflect.InvocationTargetException;
-//import java.lang.reflect.Method;
-//import java.sql.Date;
-//import java.time.LocalDate;
-//
-//public class Research {
-//    @SearchField
-//    Integer categorie;
-//    String categorieSign;
-//    @SearchField
-//    Date date;
-//    String dateSign;
-//    @SearchField
-//    String keyword;
-//    String keywordSign;
-//
-//    @SearchField
-//    Double price;
-//    String priceSign;
-//    @SearchField
-//    Integer statut;
-//    String statutSign;
-//
-//    public String getKeywordSign() {
-//        return keywordSign;
-//    }
-//
-//    public void setKeywordSign(String keywordSign) {
-//        this.keywordSign = keywordSign;
-//    }
-//
-//    public String getDateSign() {
-//        return dateSign;
-//    }
-//
-//    public void setDateSign(String dateSign) {
-//        this.dateSign = dateSign;
-//    }
-//
-//    public String getCategorieSign() {
-//        return categorieSign;
-//    }
-//
-//    public void setCategorieSign(String categorieSign) {
-//        this.categorieSign = categorieSign;
-//    }
-//
-//    public String getPriceSign() {
-//        return priceSign;
-//    }
-//
-//    public void setPriceSign(String priceSign) {
-//        this.priceSign = priceSign;
-//    }
-//
-//    public String getStatutSign() {
-//        return statutSign;
-//    }
-//
-//    public void setStatutSign(String statutSign) {
-//        this.statutSign = statutSign;
-//    }
-//
-//    public String getKeyword() {
-//        return keyword;
-//    }
-//
-//    public void setKeyword(String keyword) {
-//        this.keyword = keyword;
-//    }
-//
-//    public Date getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(Date date) {
-//        this.date = date;
-//    }
-//
-//    public Integer getCategorie() {
-//        return categorie;
-//    }
-//
-//    public void setCategorie(Integer categorie) {
-//        this.categorie = categorie;
-//    }
-//
-//    public Double getPrice() {
-//        return price;
-//    }
-//
-//    public void setPrice(Double price) {
-//        this.price = price;
-//    }
-//
-//    public Integer getStatut() {
-////        -1 is the default value
-////        if(statut==-1)
-////            return not null
-//
-//        return statut;
-//    }
-//
-//    public void setStatut(Integer statut) {
-//        this.statut = statut;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "Research{" +
-//                "keyword='" + keyword + '\'' +
-//                ", date=" + date +
-//                ", categorie=" + categorie +
-//                ", price=" + price +
-//                ", statut=" + statut +
-//                '}';
-//    }
-//
-//    public String theFunction(String[] s,Object[] dv){
-//        return "SELECT * FROM table where true and timingstart "+s[0]+" "+dv[0]+" and description "+s[1]+" "+dv[1]+" and idCategorie "+s[2]+" "+dv[2];
-//    }
-//
-//    public Object[][] prepareResearch(){
-////            the value and the sign you should use are passed , if they don't exist use the default
-//            Field[] allFields = this.getClass().getDeclaredFields();
-//            String[] s = new String[allFields.length];
-//            Object[] dv = new Object[allFields.length];
-//            for (int i =0;i<allFields.length;i++) {
-//                if(allFields[i].isAnnotationPresent(SearchField.class)) {
-//                    if (allFields[i] == null) {
-//                        s[i] = allFields[i].getAnnotation(SearchField.class).defaultSign();
-//                        dv[i] = allFields[i].getAnnotation(SearchField.class).defaultValue();
-//                    } else {
-//                        PropertyDescriptor propertyDescriptor = null;
-//                        try {
-//                            propertyDescriptor = new PropertyDescriptor(allFields[i].getName(), this.getClass());
-//                            Method m = propertyDescriptor.getReadMethod();
-//                            s[i] = (String) this.getClass().getDeclaredField(allFields[i].getName()+"Sign").get(this);
-//                            dv[i] = m.invoke(this);
-//
-//                        } catch (IntrospectionException e) {
-//                            throw new RuntimeException(e);
-//                        } catch (InvocationTargetException e) {
-//                            throw new RuntimeException(e);
-//                        } catch (IllegalAccessException e) {
-//                            throw new RuntimeException(e);
-//                        } catch (NoSuchFieldException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//
-//                    }
-//                }
-//            }
-//
-//        Object[][] result = new Object[2][allFields.length];
-//            result[0] = s;
-//            result[1] = dv;
-//        return result;
-////
-////
-//    }
-//}
+package group.enchere.ModelUtils;
+
+import group.enchere.CustomAnnotation.SearchField;
+import group.enchere.model.Enchere;
+import group.enchere.model.EnchereStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Research {
+    @SearchField
+    Integer idCategorie;
+    String idCategorieSign;
+    @SearchField
+    Timestamp timingStart;
+    String timingStartSign;
+    @SearchField
+    String description;
+
+    String descriptionSign;
+
+    @SearchField
+    Integer status;
+    String statusSign;
+
+//    we are talking about the current highest price for one enchere
+    @SearchField
+    Double price;
+    String priceSign;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getStatusSign() {
+        return statusSign;
+    }
+
+    public void setStatusSign(String statusSign) {
+        this.statusSign = statusSign;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getPriceSign() {
+        return priceSign;
+    }
+
+    public void setPriceSign(String priceSign) {
+        this.priceSign = priceSign;
+    }
+
+    public Integer getIdCategorie() {
+        return idCategorie;
+    }
+
+    public void setIdCategorie(Integer idCategorie) {
+        this.idCategorie = idCategorie;
+    }
+
+    public String getIdCategorieSign() {
+        return idCategorieSign;
+    }
+
+    public void setIdCategorieSign(String idCategorieSign) {
+        this.idCategorieSign = idCategorieSign;
+    }
+
+    public Timestamp getTimingStart() {
+        return timingStart;
+    }
+
+    public void setTimingStart(Timestamp timingStart) {
+        this.timingStart = timingStart;
+    }
+
+    public String getTimingStartSign() {
+        return timingStartSign;
+    }
+
+    public void setTimingStartSign(String timingStartSign) {
+        this.timingStartSign = timingStartSign;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescriptionSign() {
+        return descriptionSign;
+    }
+
+    public void setDescriptionSign(String descriptionSign) {
+        this.descriptionSign = descriptionSign;
+    }
+
+    @Override
+    public String toString() {
+        return "Research{" +
+                "idCategorie=" + idCategorie +
+                ", idCategorieSign='" + idCategorieSign + '\'' +
+                ", timingStart=" + timingStart +
+                ", timingStartSign='" + timingStartSign + '\'' +
+                ", description='" + description + '\'' +
+                ", descriptionSign='" + descriptionSign + '\'' +
+                ", status=" + status +
+                ", price=" + price +
+                '}';
+    }
+
+    public String theFunction(String[] s, Object[] dv){
+        return "SELECT * FROM table where true and timingstart "+s[0]+" "+dv[0]+" and description "+s[1]+" "+dv[1]+" and idCategorie "+s[2]+" "+dv[2];
+    }
+
+    public String prepareResearch(){
+//            the value and the sign you should use are passed , if they don't exist use the default
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SELECT * FROM V_ENCHERE_STATUS WHERE TRUE");
+        Field[] allFields = this.getClass().getDeclaredFields();
+        Object value = null;
+        for (int i =0;i<allFields.length;i++) {
+            if(allFields[i].isAnnotationPresent(SearchField.class)) {
+                stringBuilder.append(" and "+allFields[i].getName()+" ");
+                try {
+                    PropertyDescriptor propertyDescriptor = null;
+                    propertyDescriptor = new PropertyDescriptor(allFields[i].getName(), this.getClass());
+                    Method m = propertyDescriptor.getReadMethod();
+                    value = m.invoke(this);
+
+//                        System.out.println("for field "+allFields[i].getName());
+                    if ( value == null)
+                        stringBuilder.append(allFields[i].getAnnotation(SearchField.class).defaultSign()+" "+allFields[i].getAnnotation(SearchField.class).defaultValue());
+                    else
+                        stringBuilder.append(this.getClass().getDeclaredField(allFields[i].getName()+"Sign").get(this)+" "+value);
+
+                } catch (IntrospectionException e) {
+                    throw new RuntimeException(e);
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                }
+
+//                    System.out.println("Default value being "+dv[i]+" and sign "+s[i]);
+            }
+
+        }
+
+        System.out.println(stringBuilder.toString());
+        return stringBuilder.toString();
+    }
+
+    public ArrayList<EnchereStatus> executeSearch(String query, JdbcTemplate jdbcTemplate){
+        ArrayList<EnchereStatus> correspondEnchere = new ArrayList<>();
+        jdbcTemplate.query(query,(rs, rowNum) -> new EnchereStatus(
+                rs.getInt("idenchere"),
+                rs.getTimestamp("timingStart").toLocalDateTime(),
+                rs.getInt("idLauncher"),
+                rs.getString("description"),
+                rs.getInt("idCategorie"),
+                rs.getDouble("startPrice"),
+                rs.getInt("duration"),
+                rs.getDouble("commission"),
+                rs.getInt("status"),
+                rs.getDouble("price")
+                )
+        ).forEach(enchere-> correspondEnchere.add(enchere));
+
+        return correspondEnchere;
+    }
+}

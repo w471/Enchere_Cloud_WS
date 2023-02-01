@@ -76,7 +76,8 @@ public class Clientcontroler {
     }
 
     @PostMapping("/checkLogin")
-    public String checkLogin(@RequestBody Map<String, Object> payload) throws NoResultException {
+    public Object[] checkLogin(@RequestBody Map<String, Object> payload) throws NoResultException {
+        Object[] result = new Object[2];
         List<Client> all = repoClient.findAll();
         String identifiant = (String) payload.get("email");
         String mdp = (String) payload.get("password");
@@ -89,12 +90,9 @@ public class Clientcontroler {
                 // saving in its database
                 authTokenRepository.save(authToken);
 
-                // sending the token to the navigator in its header
-//                HttpHeaders headers = new HttpHeaders();
-//                headers.set("Bearer",authToken.getToken());
-
-//                return new ResponseEntity<String>("Identifiants corrects",headers, HttpStatus.CREATED);
-                return authToken.getToken();
+                result[0] =authToken.getToken();
+                result[1] = administrateur.getIdAdmin();
+                return result;
             }
         }
         throw new NoResultException("Pas de client trouvé pour cet identifiant");

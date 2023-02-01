@@ -36,15 +36,16 @@ public class RefillPending {
         return idClient;
     }
 
-    public void setIdClient(int idClient) {
-        this.idClient = idClient;
-    }
+    public void setIdClient(int idClient) {this.idClient = idClient;}
 
     public double getVola() {
         return vola;
     }
 
-    public void setVola(double vola) {
+    public void setVola(double vola) throws Exception {
+        if(vola<0)
+            throw new Exception("Pas d'argent negatif");
+
         this.vola = vola;
     }
 

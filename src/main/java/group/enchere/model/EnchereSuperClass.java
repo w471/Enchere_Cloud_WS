@@ -1,7 +1,10 @@
 package group.enchere.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 
 @MappedSuperclass
 public class EnchereSuperClass {
@@ -26,8 +29,7 @@ public class EnchereSuperClass {
     double startPrice;
 
     int duration;
-
-    double commission;
+    Double commission;
 
     public int getIdEnchere() {
         return idEnchere;
@@ -85,11 +87,11 @@ public class EnchereSuperClass {
         this.duration = duration;
     }
 
-    public double getCommission() {
+    public Double getCommission() {
         return commission;
     }
 
-    public void setCommission(double commission) {
+    public void setCommission(Double commission) {
         this.commission = commission;
     }
 
@@ -106,4 +108,17 @@ public class EnchereSuperClass {
                 ", commission=" + commission +
                 '}';
     }
+
+    public EnchereSuperClass(int idEnchere, LocalDateTime timingStart, int idLauncher, String description, int idCategorie, double startPrice, int duration, double commission) {
+        this.idEnchere = idEnchere;
+        this.timingStart = timingStart;
+        this.idLauncher = idLauncher;
+        this.description = description;
+        this.idCategorie = idCategorie;
+        this.startPrice = startPrice;
+        this.duration = duration;
+        this.commission = commission;
+    }
+
+    public EnchereSuperClass(){}
 }

@@ -20,9 +20,6 @@ public interface EnchereRepository extends JpaRepository<Enchere,Integer> {
     @Query(name = "getHistorique",nativeQuery = true)
     public List<HistoriqueEnchere> getHistorique(@Param("idEnchere") int idEnchere);
 
-    @Query(name = "search",nativeQuery = true)
-    public List<Enchere> search(@Param("idCategorie") Object idCategorie,@Param("idCategorieSign") Object idCategorieSign,@Param("timingStart") Object timingStart,@Param("timingStartSign") Object timingStartSign,@Param("keyword") Object keyword,@Param("keywordSign") Object keywordSign);
-
     @Query(name = "allPossesed",nativeQuery = true)
     public List<EnchereStatus> allPossesed(@Param("idPersonne") int idPersonne);
 

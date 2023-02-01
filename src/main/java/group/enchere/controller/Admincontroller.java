@@ -49,7 +49,8 @@ public class Admincontroller {
     }
 
     @PostMapping("/checkLogin")
-    public String checkLogin(@RequestBody Map<String, Object> payload) throws NoResultException {
+    public Object[] checkLogin(@RequestBody Map<String, Object> payload) throws NoResultException {
+        Object[] result = new Object[2];
         List<Admin> all = adminRepository.findAll();
         String identifiant = (String) payload.get("email");
         String mdp = (String) payload.get("password");
@@ -68,7 +69,9 @@ public class Admincontroller {
 //                headers.set("Bearer",authToken.getToken());
 
 //                return new ResponseEntity<String>("Identifiants corrects",headers, HttpStatus.CREATED);
-                return authToken.getToken();
+                result[0] = authToken.getToken();
+                result[1] = administrateur.getIdAdmin();
+                return result;
             }
         }
 

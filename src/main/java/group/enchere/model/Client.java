@@ -13,6 +13,14 @@ public class Client extends IdentifierSuperClass{
     String nom;
     String prenom;
 
+    public int getIdAdmin() {
+        return idAdmin;
+    }
+
+    public void setIdAdmin(int idAdmin) {
+        this.idAdmin = idAdmin;
+    }
+
     public String getNom() {
         return nom;
     }

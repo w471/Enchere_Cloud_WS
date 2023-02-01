@@ -3,16 +3,30 @@ SELECT *
 FROM ENCHERE
 WHERE CURRENT_TIMESTAMP < timingStart+ interval '1 hour'*duration;
 
--- allow us to get the winner per enchere
-CREATE OR REPLACE  VIEW V_WINNER_PER_ENCHERE AS
-select idClient,t1.idenchere,price
-from historique_enchere
-         join (
+CREATE OR REPLACE VIEW V_WINNING_PRICE AS
+select enchere.*,
+       case
+           when winnerPrice is null then enchere.startprice
+           else winnerPrice
+           end as price
+from enchere
+         left join (
     select idenchere,
            max(price) as winnerPrice
     from historique_enchere
     group by idenchere
-) as t1 on t1.idenchere = historique_enchere.idenchere and historique_enchere.price = winnerPrice;
+) as t1 on enchere.idenchere = t1.idenchere;
+
+-- allow us to get the winner per enchere
+-- possible diso le second condition de join since the winner price is not unique
+-- en réalité efa assurer any amin ny métier fa tokony unique io
+CREATE OR REPLACE  VIEW V_WINNER_PER_ENCHERE AS
+select idClient,wp.idenchere,wp.price
+from historique_enchere
+         join V_WINNING_PRICE wp on wp.idenchere = historique_enchere.idenchere and historique_enchere.price = wp.price;
+
+
+
 
 CREATE OR REPLACE  VIEW V_MONEY_SPENT_PER_CLIENT as
 select idClient,
@@ -94,9 +108,11 @@ order by stat desc;
 
 
 CREATE OR REPLACE VIEW V_ENCHERE_STATUS AS
-select *,
+select enchere.*,
        case
-           when idenchere in (select idenchere from v_enchere_not_done) then 0
+           when enchere.idenchere in (select idenchere from v_enchere_not_done) then 0
             else 1
-        end status
-from enchere;
+        end status,
+        vwp.price
+from enchere
+    join v_winning_price vwp on enchere.idenchere = vwp.idenchere;
