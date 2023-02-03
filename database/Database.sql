@@ -1,15 +1,15 @@
 -- CREATE DATABASE ENCHERE;
 
 -- client and admin extends the same class
-
 CREATE SEQUENCE S_CLIENT_ID start with 1 increment 1;
 CREATE TABLE CLIENT(
                        idClient integer primary key default nextVal('S_CLIENT_ID'),
-                       nom varchar(25),
-                       prenom varchar(25),
                        email varchar(25) unique not null,
-                       password varchar(25) not null
+                       password varchar(25) not null,
+                       nom varchar(25),
+                       prenom varchar(25)
 );
+
 INSERT INTO CLIENT VALUES
                        (default,'jean@gmail.com','mdp','jean','jean_prenom'),
                        (default,'rakoto@gmail.com','rakoto','rakoto','rakoto_prenom'),
