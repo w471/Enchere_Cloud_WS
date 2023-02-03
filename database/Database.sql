@@ -59,17 +59,18 @@ CREATE TABLE ENCHERE(
                         idCategorie integer references CATEGORIE(idCategorie) not null,
                         startPrice double precision not null check ( startPrice>=0 ) default 0,
                         duration integer not null check ( duration>=0 ) default 0,
-                        commission double precision check ( commission>=0 ) default 0
+                        commission double precision check ( commission>=0 ) default 0,
+                        image text
 );
-INSERT INTO ENCHERE(timingStart,idLauncher,description,idCategorie,startPrice,duration,commission) VALUES
-(default,1,'ordinateur en tres bon etat',1,2000,3,0.2),
-(default,2,'Golf 5 GTI neuve',2,20000,5,0.4),
-(default,3,'collier diamant',3,300000,3,0.1),
-(default,4,'robe',4,1000,2,0.2),
-(default,5,'Appartement  a andoharanofotsy',5,100000,8,0.1),
-(default,6,'Canape',6,1500,6,0.5),
-(default,7,'iphone 14',1,10000,1,0.3),
-(default,8,'Table',6,2000,2,0.2);
+INSERT INTO ENCHERE(timingStart,idLauncher,description,idCategorie,startPrice,duration,commission,image) VALUES
+(default,1,'ordinateur en tres bon etat',1,2000,3,0.2,null),
+(default,2,'Golf 5 GTI neuve',2,20000,5,0.4,null),
+(default,3,'collier diamant',3,300000,3,0.1,null),
+(default,4,'robe',4,1000,2,0.2,null),
+(default,5,'Appartement  a andoharanofotsy',5,100000,8,0.1,null),
+(default,6,'Canape',6,1500,6,0.5,null),
+(default,7,'iphone 14',1,10000,1,0.3,null),
+(default,8,'Table',6,2000,2,0.2,null);
 
 -- CREATE SEQUENCE S_ENCHERE_DONE_ID start with 1 increment 1;
 -- CREATE TABLE ENCHERE_DONE(
