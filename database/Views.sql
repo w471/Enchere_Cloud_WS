@@ -52,7 +52,6 @@ from (
      ) as t1
 group by idclient;
 
-drop view V_INCOME_MONEY_PER_CLIENT_ENCHERE cascade
 
 CREATE OR REPLACE VIEW V_INCOME_MONEY_PER_CLIENT_ENCHERE as
 select c.idclient,
@@ -84,7 +83,6 @@ from V_INCOME_MONEY_PER_CLIENT as t1
 join V_MONEY_SPENT_PER_CLIENT t2 on t2.idClient = t1.idclient;
 
 
-select * from V_SOLDE_PER_CLIENT
 
 CREATE OR REPLACE VIEW V_ENCHERE_DETAILS as
 select enchere.*,
