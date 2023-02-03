@@ -30,4 +30,7 @@ public interface EnchereRepository extends JpaRepository<Enchere,Integer> {
     @Query(name = "whereIdCategorieNull",nativeQuery = true)
     public List<Categorie> whereIdCategorieNull();
 
+    @Query(name = "findEnchereStatusFromEnchere",nativeQuery = true)
+    public EnchereStatus findEnchereStatusFromEnchere(@Param("idEnchere") int idEnchere);
+
 }

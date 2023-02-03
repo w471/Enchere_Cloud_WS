@@ -40,9 +40,10 @@ public class EnchereController {
 
     @GetMapping("/{idEnchere}")
     public Object[] getDetails(@PathVariable int idEnchere){
-        Object[] data = new Object[2];
+        Object[] data = new Object[3];
         data[0] = repository.getDetails(idEnchere);
         data[1] = hRepo.getHistoriqueDetails(idEnchere);
+        data[2] = repository.findEnchereStatusFromEnchere(idEnchere).getPrice();
         return data;
     }
 
@@ -55,8 +56,8 @@ public class EnchereController {
         Enchere enchere2 = newEnchere.orElse(null);
         enchere2.setDuration(duration);
         repository.save(enchere2);
-        System.out.println("valeurs duration: "+ duration);
-        System.out.println(newEnchere);
+//        System.out.println("valeurs duration: "+ duration);
+//        System.out.println(newEnchere);
     }
 
 

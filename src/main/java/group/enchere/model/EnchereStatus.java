@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
         query = "select * from v_enchere_status where idenchere in ( select idenchere from historique_enchere where idclient= :idPersonne)",
         resultClass = EnchereStatus.class
 )
+@NamedNativeQuery(
+        name = "findEnchereStatusFromEnchere",
+        query = "select * from v_enchere_status where idenchere= :idEnchere",
+        resultClass = EnchereStatus.class
+)
 // Classe de simlpification pour recevoir le status et le prix gagnant en même temps
 public class EnchereStatus extends EnchereSuperClass{
     int status;

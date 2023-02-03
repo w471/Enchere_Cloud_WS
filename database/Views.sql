@@ -21,7 +21,7 @@ from enchere
 -- possible diso le second condition de join since the winner price is not unique
 -- en réalité efa assurer any amin ny métier fa tokony unique io
 CREATE OR REPLACE  VIEW V_WINNER_PER_ENCHERE AS
-select idClient,wp.idenchere,wp.price
+select wp.*,idClient
 from historique_enchere
          join V_WINNING_PRICE wp on wp.idenchere = historique_enchere.idenchere and historique_enchere.price = wp.price;
 
@@ -37,19 +37,43 @@ select c.idClient,
 right join client c on c.idclient = V_WINNER_PER_ENCHERE.idClient
 group by c.idClient;
 
-CREATE OR REPLACE VIEW V_INCOME_MONEY_PER_CLIENT as
+
+CREATE OR REPLACE VIEW V_INCOME_MONEY_PER_CLIENT_TRANSACTION AS
 SELECT t1.idclient,
        sum(amount) as solde
 from (
-    select c.idClient,
-             case
-                 when amount is null then 0
-                 else amount
-             end amount
-      from (select * from transaction_compte where type_transaction = 1) as tt1
-               right join client c on tt1.idclient = c.idclient
-    ) as t1
+         select c.idClient,
+                case
+                    when amount is null then 0
+                    else amount
+                    end amount
+         from (select * from transaction_compte where type_transaction = 1) as tt1
+                  right join client c on tt1.idclient = c.idclient
+     ) as t1
 group by idclient;
+
+drop view V_INCOME_MONEY_PER_CLIENT_ENCHERE cascade
+
+CREATE OR REPLACE VIEW V_INCOME_MONEY_PER_CLIENT_ENCHERE as
+select c.idclient,
+        sum(
+            case
+                when price is null then 0
+                else price*(1-t1.commission)
+            end
+            ) as income
+       from v_winner_per_enchere t1
+right join  client c on t1.idlauncher = c.idclient
+group by c.idClient;
+
+
+
+CREATE OR REPLACE VIEW V_INCOME_MONEY_PER_CLIENT as
+    select vimp.idClient,income+solde as solde
+    from V_INCOME_MONEY_PER_CLIENT_ENCHERE vimp
+join V_INCOME_MONEY_PER_CLIENT_TRANSACTION VIMPCT on vimp.idClient = VIMPCT.idclient;
+
+-- select* from V_SOLDE_PER_CLIENT
 
 CREATE OR REPLACE VIEW V_SOLDE_PER_CLIENT as
 select t1.idClient,
@@ -59,6 +83,8 @@ select t1.idClient,
 from V_INCOME_MONEY_PER_CLIENT as t1
 join V_MONEY_SPENT_PER_CLIENT t2 on t2.idClient = t1.idclient;
 
+
+select * from V_SOLDE_PER_CLIENT
 
 CREATE OR REPLACE VIEW V_ENCHERE_DETAILS as
 select enchere.*,
