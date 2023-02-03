@@ -1,20 +1,19 @@
 package group.enchere.ModelUtils;
 
 import group.enchere.CustomAnnotation.SearchField;
-import group.enchere.model.Enchere;
 import group.enchere.model.EnchereStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
+//import java.beans.IntrospectionException;
+//import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+//import java.lang.reflect.InvocationTargetException;
+//import java.lang.reflect.Method;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
+//import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+//import java.util.List;
 
 public class Research {
     @SearchField
@@ -140,10 +139,13 @@ public class Research {
             if(allFields[i].isAnnotationPresent(SearchField.class)) {
                 stringBuilder.append(" and "+allFields[i].getName()+" ");
                 try {
-                    PropertyDescriptor propertyDescriptor = null;
-                    propertyDescriptor = new PropertyDescriptor(allFields[i].getName(), this.getClass());
-                    Method m = propertyDescriptor.getReadMethod();
-                    value = m.invoke(this);
+//                    PropertyDescriptor propertyDescriptor = null;
+//                    propertyDescriptor = new PropertyDescriptor(allFields[i].getName(), this.getClass());
+                    allFields[i].setAccessible(true);
+
+
+//                    Method m = propertyDescriptor.getReadMethod();
+                    value = allFields[i].get(this);
 
                         System.out.println("for field "+allFields[i].getName()+"="+value);
                     if ( value == null)
@@ -157,11 +159,7 @@ public class Research {
                     }
 
 
-                } catch (IntrospectionException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
+                }catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 } catch (NoSuchFieldException e) {
                     throw new RuntimeException(e);
