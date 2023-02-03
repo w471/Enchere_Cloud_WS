@@ -106,7 +106,6 @@ public class Clientcontroler {
         String identifiant = (String) payload.get("email");
         String mdp = (String) payload.get("password");
         for (Client administrateur : all) {
-            System.out.println(administrateur);
             if (administrateur.getEmail().equals(identifiant) && administrateur.getPassword().equals(mdp)) {
                 // Creating the token
                 AuthToken authToken = new AuthToken();
