@@ -45,6 +45,13 @@ public class EnchereStatus extends EnchereSuperClass{
         this.price = price;
     }
 
+    public EnchereStatus(int idEnchere, LocalDateTime timingStart, int idLauncher, String description, int idCategorie, double startPrice, int duration, double commission, int status, double price,String image) {
+        super(idEnchere, timingStart, idLauncher, description, idCategorie, startPrice, duration, commission);
+        this.status = status;
+        this.price = price;
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "EnchereStatus{" +

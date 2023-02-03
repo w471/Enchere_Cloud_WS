@@ -27,27 +27,36 @@ from historique_enchere
 
 
 
-
 CREATE OR REPLACE  VIEW V_MONEY_SPENT_PER_CLIENT as
-select idClient,
-       sum(price) as totalSpent
+select c.idClient,
+       case
+        when sum(price) is null then 0
+           else sum(price)
+        end totalSpent
     from V_WINNER_PER_ENCHERE
-group by idClient;
+right join client c on c.idclient = V_WINNER_PER_ENCHERE.idClient
+group by c.idClient;
 
+CREATE OR REPLACE VIEW V_INCOME_MONEY_PER_CLIENT as
+SELECT t1.idclient,
+       sum(amount) as solde
+from (
+    select c.idClient,
+             case
+                 when amount is null then 0
+                 else amount
+             end amount
+      from (select * from transaction_compte where type_transaction = 1) as tt1
+               right join client c on tt1.idclient = c.idclient
+    ) as t1
+group by idclient;
 
 CREATE OR REPLACE VIEW V_SOLDE_PER_CLIENT as
 select t1.idClient,
     t1.solde as totalIncome,
        t2.totalSpent,
        t1.solde-t2.totalSpent as solde
-from
-    (
-        select idClient,
-               sum(amount) as solde
-        from transaction_compte
-        where type_transaction=1
-        group by idClient
-    ) as t1
+from V_INCOME_MONEY_PER_CLIENT as t1
 join V_MONEY_SPENT_PER_CLIENT t2 on t2.idClient = t1.idclient;
 
 
@@ -60,6 +69,13 @@ from enchere
 join client c on enchere.idlauncher = c.idclient
 join categorie c2 on enchere.idcategorie = c2.idcategorie;
 
+
+CREATE OR REPLACE VIEW V_HISTORIQUE_ENCHERE_DETAILS AS
+select historique_enchere.*,
+       c.nom,
+       c.prenom
+    from historique_enchere
+join client c on historique_enchere.idclient = c.idclient;
 
 -- longest discussion , le plus populaire
 CREATE OR REPLACE VIEW V_CATEGORIE_LONGEST_DISCUSSION as

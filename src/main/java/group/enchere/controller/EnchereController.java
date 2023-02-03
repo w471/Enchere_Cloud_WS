@@ -6,6 +6,7 @@ import group.enchere.model.Enchere;
 
 import group.enchere.model.EnchereStatus;
 import group.enchere.modelRepository.EnchereRepository;
+import group.enchere.modelRepository.HistoriqueEnchereRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +22,13 @@ import java.util.Optional;
 @RequestMapping("/encheres")
 public class EnchereController {
     EnchereRepository repository;
+    HistoriqueEnchereRepository hRepo;
     JdbcTemplate jdbcTemplate;
 
-    public EnchereController(EnchereRepository repo,JdbcTemplate temp){
+    public EnchereController(EnchereRepository repo,JdbcTemplate temp,HistoriqueEnchereRepository repo2){
         this.repository = repo;
         jdbcTemplate = temp;
+        hRepo = repo2;
     }
 
 
@@ -39,7 +42,7 @@ public class EnchereController {
     public Object[] getDetails(@PathVariable int idEnchere){
         Object[] data = new Object[2];
         data[0] = repository.getDetails(idEnchere);
-        data[1] = repository.getHistorique(idEnchere);
+        data[1] = hRepo.getHistoriqueDetails(idEnchere);
         return data;
     }
 

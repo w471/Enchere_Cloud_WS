@@ -29,6 +29,10 @@ public class Clientcontroler {
         hRepo = repoH;
     }
 
+    @GetMapping("/{idClient}")
+    public Client getClient(@PathVariable("idClient") int idClient){
+         return repoClient.findById(idClient).orElse(null);
+    }
 
     @PostMapping("/refill")
     public void refill(@RequestBody RefillPending refil) {
@@ -44,14 +48,23 @@ public class Clientcontroler {
     public void bid(@RequestBody HistoriqueEnchere historiqueEnchere) throws Exception {
         ClientFinanceStatus clientSolde = repoClient.getSolde(historiqueEnchere.getIdClient());
 
+//        what is the floor price
+         Enchere e = enchereRepository.findById(historiqueEnchere.getIdEnchere()).orElse(null);
+        if(historiqueEnchere.getPrice()<e.getStartPrice())
+            throw new Exception("Prix inferieur au prix minimum");
+
 //        do you even have the amount you are saying
         if(historiqueEnchere.getPrice()>clientSolde.getSolde())
             throw new Exception("Solde insuffisant pour l offre");
 
 //        check = the money he is biding> previous
         List<HistoriqueEnchere> historiqueEncheres =  enchereRepository.getHistorique(historiqueEnchere.getIdEnchere());
-        if(historiqueEncheres.get(0).getPrice()>=historiqueEnchere.getPrice())
-            throw new Exception("Offre inferieur a l offre actuelle");
+//        if an enchere has no historique => useless to check
+        if(historiqueEncheres.size()>0){
+//            index 0 because the max is already on the first index
+            if(historiqueEncheres.get(0).getPrice()>=historiqueEnchere.getPrice())
+                throw new Exception("Offre inferieur a l offre actuelle");
+        }
 
 
 //        lock the money by inserting his offre as the current max
@@ -68,6 +81,12 @@ public class Clientcontroler {
     @GetMapping("/getInvolved")
     public List<EnchereStatus> getInvolved(@RequestParam int idPersonne){
         return enchereRepository.getInvolved(idPersonne);
+    }
+
+//    allow us to get the list of auction not done yet + not owned => auction list on which he can bid
+    @GetMapping("/list")
+    public List<EnchereStatus> getEnchereBiddable(@RequestParam int idPersonne){
+        return repoClient.getBiddable(idPersonne);
     }
 
     @PostMapping("/signIn")

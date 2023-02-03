@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface SearchField {
     String defaultValue() default "not null";
     String defaultSign() default "is";
-//    TODO search correct type
-//    Object value();
+    boolean isQuoted() default false;
+
 
 }

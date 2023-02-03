@@ -20,14 +20,12 @@ public class Research {
     @SearchField
     Integer idCategorie;
     String idCategorieSign;
-    @SearchField
+    @SearchField(isQuoted = true)
     Timestamp timingStart;
     String timingStartSign;
-    @SearchField
+    @SearchField(isQuoted = true)
     String description;
-
     String descriptionSign;
-
     @SearchField
     Integer status;
     String statusSign;
@@ -131,9 +129,6 @@ public class Research {
                 '}';
     }
 
-    public String theFunction(String[] s, Object[] dv){
-        return "SELECT * FROM table where true and timingstart "+s[0]+" "+dv[0]+" and description "+s[1]+" "+dv[1]+" and idCategorie "+s[2]+" "+dv[2];
-    }
 
     public String prepareResearch(){
 //            the value and the sign you should use are passed , if they don't exist use the default
@@ -150,11 +145,17 @@ public class Research {
                     Method m = propertyDescriptor.getReadMethod();
                     value = m.invoke(this);
 
-//                        System.out.println("for field "+allFields[i].getName());
+                        System.out.println("for field "+allFields[i].getName()+"="+value);
                     if ( value == null)
                         stringBuilder.append(allFields[i].getAnnotation(SearchField.class).defaultSign()+" "+allFields[i].getAnnotation(SearchField.class).defaultValue());
-                    else
-                        stringBuilder.append(this.getClass().getDeclaredField(allFields[i].getName()+"Sign").get(this)+" "+value);
+                    else{
+                        if(allFields[i].getAnnotation(SearchField.class).isQuoted())
+                        stringBuilder.append(this.getClass().getDeclaredField(allFields[i].getName()+"Sign").get(this)+" '%"+value+"%'");
+
+                        else
+                            stringBuilder.append(this.getClass().getDeclaredField(allFields[i].getName()+"Sign").get(this)+" "+value+"");
+                    }
+
 
                 } catch (IntrospectionException e) {
                     throw new RuntimeException(e);
@@ -187,7 +188,8 @@ public class Research {
                 rs.getInt("duration"),
                 rs.getDouble("commission"),
                 rs.getInt("status"),
-                rs.getDouble("price")
+                rs.getDouble("price"),
+                rs.getString("image")
                 )
         ).forEach(enchere-> correspondEnchere.add(enchere));
 
