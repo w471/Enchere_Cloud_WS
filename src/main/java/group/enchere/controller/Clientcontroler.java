@@ -89,6 +89,11 @@ public class Clientcontroler {
         return repoClient.getBiddable(idPersonne);
     }
 
+    @GetMapping("/lists")
+    public List<EnchereStatus> getEnchereBiddable(){
+        return repoClient.getGeneralBiddable();
+    }
+
     @PostMapping("/signIn")
     public void SignIn(@RequestBody Client client){
         repoClient.save(client);

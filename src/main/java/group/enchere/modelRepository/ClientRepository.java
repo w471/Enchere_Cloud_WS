@@ -15,4 +15,7 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
 
     @Query(name = "getBiddable",nativeQuery = true)
     public List<EnchereStatus> getBiddable(@Param("idPersonne") int idPersonne);
+
+    @Query(name = "getGeneralBiddable",nativeQuery = true)
+    public List<EnchereStatus> getGeneralBiddable();
 }

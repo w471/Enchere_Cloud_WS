@@ -8,6 +8,11 @@ import javax.persistence.*;
         query = "SELECT * FROM V_ENCHERE_STATUS where idlauncher!= :idPersonne and status=0",
         resultClass = EnchereStatus.class
 )
+@NamedNativeQuery(
+        name = "getGeneralBiddable",
+        query = "SELECT * FROM V_ENCHERE_STATUS where status=0",
+        resultClass = EnchereStatus.class
+)
 public class Client extends IdentifierSuperClass{
     @Id
     @Column(name = "idclient")
